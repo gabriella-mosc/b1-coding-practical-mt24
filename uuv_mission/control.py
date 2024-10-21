@@ -1,16 +1,18 @@
 import numpy as np
-import matplotlib.pyplot as plt
 
 class PDController:
     def __init__(self, Kp, Kd):
         self.Kp = Kp
         self.Kd = Kd
+        self.prev_error = 0
 
-    def compute_error(self, reference, depth):
-        error = reference - depth
-        return error
+    def compute_output(self, position, reference):
+        pos_y = position[1]
 
-    def compute_ouput(self, error, error_difference):
+        error = reference - pos_y 
+        error_difference = error - self.prev_error
+        self.prev_error = error
+
         # Proportional term
         P = self.Kp * error
         # Derivative term
@@ -18,4 +20,5 @@ class PDController:
         # Control output
         output = P + D
         return output
+    
 
